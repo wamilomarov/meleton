@@ -43,7 +43,7 @@ class ConvertRequest extends FormRequest
             'value' => [
                 'required',
                 'numeric',
-                'gte:1'
+                'gte:0.01'
             ]
         ];
     }
