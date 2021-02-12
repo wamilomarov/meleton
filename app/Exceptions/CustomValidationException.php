@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 class CustomValidationException extends Exception
 {
-    public $status = 403;
+    public $status = 422;
 
     public function __construct(Validator $validator, $response = null, $errorBag = 'default')
     {
