@@ -1,79 +1,99 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
 
-## About Laravel
+# First task:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The following are tables I used for this task:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+###books
+Storing book names and authors
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+id | name | author |
+--- | --- | --- |
+1 | Romeo and Juliet | William Shakespeare |
+2 | War and Peace | Leo Tolstoy |
+3 | Little Prince | Antoine de Saint-Exupery |
+4 | Second book | William Shakespeare |
+5 | Some another book | William Shakespeare |
+6 | Lorem book | Leo Tolstoy |
 
-## Learning Laravel
+###users
+Storing user's name and age
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+id | first_name | last_name | age
+--- | --- | --- | ---
+1 | Ivan | Ivanov | 18
+2 | Marina | Ivanova | 14
+3 | Shamil | Omarov | 12
+4 | Eva | Adams | 5
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+###user_books
+Storing books taken by users
 
-## Laravel Sponsors
+id | user_id | book_id
+--- | --- | ---
+1 | 1 | 1 
+2 | 1 | 3
+3 | 2 | 2
+4 | 3 | 3
+5 | 4 | 1
+6 | 4 | 2
+7 | 1 | 4
+8 | 2 | 6
+9 | 3 | 4
+10 | 3 | 5
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Query to fetch users aged between 7 and 17 who has taken only 2 books having same authors:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+`SELECT u.id, u.first_name, u.last_name, b.author, group_concat(b.name) AS books
+FROM meleton.user_books AS ub
+INNER JOIN meleton.books AS b ON ub.book_id = b.id
+INNER JOIN meleton.users AS u ON ub.user_id = u.id
+WHERE u.age BETWEEN 7 AND 17
+GROUP BY ub.user_id, b.author
+HAVING count(ub.book_id) = 2;`
 
-## Contributing
+###Results of query:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+id | first_name | last_name | author | books
+--- | --- | --- | --- | ---
+2 | Marina | Ivanova | Leo Tolstoy | Lorem book, War and Peace
+3 | Shamil | Omarov | William Shakespeare | Some another book,Second book
 
-## Code of Conduct
+# Second task:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+To run the project:
+  - Configure .env file based on .env.example
+  - run `composer install`
+  - run `php artisan migrate`
+  - run `php artisan db:seed --class=RateSeeder`
+  - run `php artisan serve`
 
-## Security Vulnerabilities
+Firs of all I created a table with the following fields:
+ - id
+ - currency
+ - buy
+ - sell
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+These are storing each currency with its buy and sell rates. I made a seeder (RateSeeder) to feed the database. Here I added BTC currency hardcoded, as it will be used to convert as an instance.
 
-## License
+Authentication is done my Laravel default Auth middleware, I just overwrote the handle method of it, to check the specified api token as it was mentioned in the task description.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+I made a custom validation exception to provide error response body in the format given in the task (CustomValidationException). It is actually used also as auth failure exception, so it may be renamed to smth general.
+
+Rate service has its methods to get/filter/sort rates, get a single rate and convert between two rate instances. The last one is because I added BTC record manually, I designed it to convert between two instances.
+The service is instantiated in the constructor of the RatesController. It may be instantiated in base Controller to use everywhere in controllers, I did it because for now I have only one controller and no need to create it everywhere.
+
+In routing, I made 2 groups:
+ - With prefix V1 which is for versioning the api.
+ - With auth:api middleware, to group together the auth routes of V1 group.
+
+Each rate has two appending attributes: calculated_buy and calculated_sell which are calculated based on according columns. These are to apply 2% commission fee. In conversion, I use the value that has been applied commission fee. This way I calculate the rate and store it in conversion_logs table. This one is created for the column `created_at` in response.
+
+
+## Testing and Documentation
+
+The application was run and tested manually in local development environment. I have documented the endpoints and responses using Postman. The collection from postman is shared in the following [link](https://documenter.getpostman.com/view/1052304/TWDRremd).
+
+
+
+
