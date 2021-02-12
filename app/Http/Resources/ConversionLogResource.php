@@ -14,10 +14,14 @@ class ConversionLogResource extends JsonResource
      */
     public function toArray($request)
     {
-        $digits = 2;
         if ($this->currency_to == 'BTC')
         {
             $digits = 10;
+        }
+        else
+        {
+            $digits = 2;
+            $this->converted_value = $this->converted_value < 0.005 ? 0.005 : $this->converted_value;
         }
         return [
             'currency_from' => $this->currency_from,
